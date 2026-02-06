@@ -260,6 +260,15 @@ export default function Home() {
 
     return (
         <div className="app-container">
+            <div className="ca-banner" onClick={() => {
+                navigator.clipboard.writeText('0x8A888F91C43347320a5b650A443656C399d1Db07');
+                alert('Token CA copied to clipboard!');
+            }}>
+                <span className="ca-label">Token CA</span>
+                <span className="ca-address">0x8A888F91C43347320a5b650A443656C399d1Db07</span>
+                <span style={{ fontSize: '10px', opacity: 0.8 }}>(Click to Copy)</span>
+            </div>
+
             <div className="header">
                 <div className="header-title">
                     <img src="/logo.png" alt="mIRCBook" style={{ height: '60px', objectFit: 'contain', filter: 'drop-shadow(0px 1px 2px rgba(0,0,0,0.3))' }} />

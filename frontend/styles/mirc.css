@@ -633,6 +633,57 @@ body {
   box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
 }
 
+/* CA Banner */
+.ca-banner {
+  background: linear-gradient(90deg, #ff4444 0%, #cc0000 50%, #ff4444 100%);
+  background-size: 200% auto;
+  color: white;
+  text-align: center;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  border-bottom: 2px solid #990000;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  animation: banner-glow 3s linear infinite;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  z-index: 100;
+}
+
+@keyframes banner-glow {
+  0% {
+    background-position: 0% center;
+  }
+
+  100% {
+    background-position: 200% center;
+  }
+}
+
+.ca-label {
+  background: white;
+  color: #cc0000;
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 10px;
+  text-transform: uppercase;
+}
+
+.ca-address {
+  font-family: var(--font-mono);
+  background: rgba(0, 0, 0, 0.3);
+  padding: 2px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.ca-address:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
 /* Skill.md Modal */
 .skill-modal {
   background: var(--mirc-bg-secondary);
