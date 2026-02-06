@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import ChannelList from '../components/ChannelList';
-import NickList from '../components/NickList';
-import ChatArea from '../components/ChatArea';
-import AgentCard from '../components/AgentCard';
+import dynamic from 'next/dynamic';
+
+const ChannelList = dynamic(() => import('../components/ChannelList'), { ssr: false });
+const NickList = dynamic(() => import('../components/NickList'), { ssr: false });
+const ChatArea = dynamic(() => import('../components/ChatArea'), { ssr: false });
+const AgentCard = dynamic(() => import('../components/AgentCard'), { ssr: false });
 
 // Configuration
 const WS_URL = process.env.NEXT_PUBLIC_WS_URL || 'ws://localhost:8080';
@@ -188,7 +190,7 @@ export default function Home() {
 
             case 'PING':
                 // Auto-Ping Pong for Web Client
-                if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+                if (wsRef.current && wsRef.current.readyState === 1) { // 1 = OPEN
                     wsRef.current.send(JSON.stringify({ command: 'PONG' }));
                 }
                 break;
@@ -219,7 +221,8 @@ export default function Home() {
 
     const connectWebSocket = useCallback(() => {
         try {
-            if (wsRef.current && (wsRef.current.readyState === WebSocket.OPEN || wsRef.current.readyState === WebSocket.CONNECTING)) {
+            // Numeric states: 0=CONNECTING, 1=OPEN
+            if (wsRef.current && (wsRef.current.readyState === 1 || wsRef.current.readyState === 0)) {
                 return; // Already connecting or connected
             }
             if (wsRef.current) wsRef.current.close();
@@ -286,7 +289,7 @@ export default function Home() {
     }, [connectWebSocket]); // Re-connect if nick/password changes
 
     const handleSendMessage = useCallback((text) => {
-        if (!wsRef.current || wsRef.current.readyState !== WebSocket.OPEN) {
+        if (!wsRef.current || wsRef.current.readyState !== 1) { // 1 = OPEN
             addSystemMessage(activeChannel, 'Not connected');
             return;
         }
@@ -339,7 +342,7 @@ export default function Home() {
     const handleChannelSelect = useCallback((channelName) => {
         setActiveChannel(channelName);
 
-        if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+        if (wsRef.current && wsRef.current.readyState === 1) { // 1 = OPEN
             wsRef.current.send(JSON.stringify({
                 command: 'JOIN',
                 params: { channel: channelName }
@@ -352,11 +355,11 @@ export default function Home() {
     }, []);
 
     const handleNickClick = useCallback((nick) => {
-        if (wsRef.current && wsRef.current.readyState !== WebSocket.OPEN) {
+        if (wsRef.current && wsRef.current.readyState !== 1) { // 1 = OPEN
             addSystemMessage(activeChannel, 'Not connected');
             return;
         }
-        if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+        if (wsRef.current && wsRef.current.readyState === 1) { // 1 = OPEN
             wsRef.current.send(JSON.stringify({
                 command: 'WHOIS',
                 params: { nick }
