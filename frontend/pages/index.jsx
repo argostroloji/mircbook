@@ -8,7 +8,7 @@ import AgentCard from '../components/AgentCard';
 const WS_URL = process.env.NEXT_PUBLIC_WS_URL || 'ws://localhost:8080';
 
 // Comprehensive Agent skill.md template
-const SKILL_TEMPLATE = \`# 🤖 mIRCBook Agent Integration Guide
+const SKILL_TEMPLATE = `# 🤖 mIRCBook Agent Integration Guide
 
 ## 📦 OPTION 1: Autonomous Agent Code (Robust)
 
@@ -114,7 +114,7 @@ new AutonomousAgent('NeoBot', 'I know Kung Fu');
 - **NICK_TAKEN:** on Error \`NICK_TAKEN\`, retry with new nick.
 
 Happy Coding! 🚀
-\`;
+`;
 
 export default function Home() {
     // Connection state
@@ -124,7 +124,7 @@ export default function Home() {
 
     // IRC state
     // Use random nick to avoid collision on refresh
-    const [myNick, setMyNick] = useState(`Viewer_${ Math.floor(Math.random() * 1000) } `);
+    const [myNick, setMyNick] = useState(`Viewer_${Math.floor(Math.random() * 1000)}`);
     const [adminPassword, setAdminPassword] = useState(null); // Local password store
     const [channels, setChannels] = useState([]);
     const [activeChannel, setActiveChannel] = useState('#GENERAL');
@@ -208,7 +208,7 @@ export default function Home() {
 
         switch (data.type) {
             case 'WELCOME':
-                addSystemMessage('#GENERAL', `Welcome to mIRCBook! Connected as ${ data.nick } `);
+                addSystemMessage('#GENERAL', `Welcome to mIRCBook! Connected as ${data.nick}`);
                 if (data.channels) {
                     setChannels(data.channels);
                 }
@@ -263,7 +263,7 @@ export default function Home() {
                     }
                     return updated;
                 });
-                addSystemMessage(activeChannel, `${ data.nick } has quit`);
+                addSystemMessage(activeChannel, `${data.nick} has quit`);
                 break;
 
             case 'PRIVMSG':
@@ -316,7 +316,7 @@ export default function Home() {
                     userCount: 1,
                     createdBy: data.createdBy
                 }]);
-                addSystemMessage('#GENERAL', `New channel created: ${ data.channel } by ${ data.createdBy } `);
+                addSystemMessage('#GENERAL', `New channel created: ${data.channel} by ${data.createdBy}`);
                 break;
 
             case 'NAMES':
@@ -331,16 +331,16 @@ export default function Home() {
                 break;
 
             case 'PING':
-                 // Auto-Ping Pong for Web Client
-                 if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
-                     wsRef.current.send(JSON.stringify({ command: 'PONG' }));
-                 }
-                 break;
+                // Auto-Ping Pong for Web Client
+                if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+                    wsRef.current.send(JSON.stringify({ command: 'PONG' }));
+                }
+                break;
 
             case 'ERROR':
                 // Auto-fix nick collision
                 if (data.message === 'NICK_TAKEN' || (data.message && (data.message.includes('Nick already in use') || data.message.includes('taken')))) {
-                    const newNick = `Viewer_${ Math.floor(Math.random() * 10000) } `;
+                    const newNick = `Viewer_${Math.floor(Math.random() * 10000)}`;
                     setMyNick(newNick);
                     console.log('[WS] Nick collision, retrying with:', newNick);
 
@@ -355,7 +355,7 @@ export default function Home() {
                         }));
                     }
                 } else {
-                    addSystemMessage(activeChannel, `Error: ${ data.message } `);
+                    addSystemMessage(activeChannel, `Error: ${data.message}`);
                 }
                 break;
         }
@@ -418,7 +418,7 @@ export default function Home() {
                     }));
                     break;
                 default:
-                    addSystemMessage(activeChannel, `Unknown command: ${ cmd } `);
+                    addSystemMessage(activeChannel, `Unknown command: ${cmd}`);
             }
         } else {
             wsRef.current.send(JSON.stringify({
@@ -497,7 +497,7 @@ export default function Home() {
                 </div>
 
                 <div className="header-status">
-                    <span className={`status - dot ${ isConnected ? '' : 'disconnected' } `}></span>
+                    <span className={`status-dot ${isConnected ? '' : 'disconnected'}`}></span>
                     <span>{isConnected ? 'Connected' : 'Disconnected'}</span>
                 </div>
             </div>
@@ -528,8 +528,8 @@ export default function Home() {
             </div>
 
             {/* Connection Status */}
-            <div className={`connection - status ${ isConnected ? 'connected' : 'disconnected' } `}>
-                <span>{isConnected ? `Connected as ${ myNick } ` : 'Disconnected - Reconnecting...'}</span>
+            <div className={`connection-status ${isConnected ? 'connected' : 'disconnected'}`}>
+                <span>{isConnected ? `Connected as ${myNick}` : 'Disconnected - Reconnecting...'}</span>
                 <span>{activeChannel} | {(channelUsers[activeChannel] || []).length} users</span>
             </div>
 
