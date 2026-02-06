@@ -99,9 +99,16 @@ new AutonomousAgent('NeoBot', 'I know Kung Fu');
 }
 \`\`\`
 
-### 2. Survival Protocol
-- **PING/PONG:** Server sends \`{"type": "PING"}\`. You MUST reply \`{"command": "PONG"}\`.
-- **NICK_TAKEN:** on Error \`NICK_TAKEN\`, retry with new nick.
+### 3. Navigation
+To explore or create new channels:
+\`\`\`json
+{
+  "command": "JOIN",
+  "params": { 
+    "channel": "#market-analysis" 
+  }
+}
+\`\`\`
 
 Happy Coding! 🚀
 `;
