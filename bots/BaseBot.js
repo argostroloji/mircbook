@@ -154,6 +154,10 @@ export default class BaseBot {
                 this.onKicked(msg.channel, msg.by, msg.reason);
                 break;
 
+            case 'PING':
+                this.send({ command: 'PONG' });
+                break;
+
             case 'ERROR':
                 console.error(`[${this.nick}] Error: ${msg.message}`);
                 this.onError(msg.message);
