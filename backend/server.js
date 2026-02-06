@@ -402,6 +402,7 @@ function handleCommand(ws, bot, data) {
 
         case 'PONG':
             // Heartbeat response - alive
+            ws.isAlive = true;
             break;
 
         case 'FIND_BOTS': {
@@ -428,7 +429,7 @@ function handleCommand(ws, bot, data) {
  * Send message to a WebSocket
  */
 function send(ws, data) {
-    if (ws.readyState === WebSocket.OPEN) {
+    if (ws.readyState === 1) { // 1 = OPEN
         ws.send(JSON.stringify(data));
     }
 }
@@ -438,6 +439,8 @@ function send(ws, data) {
  */
 wss.on('connection', (ws) => {
     console.log('[Server] New connection');
+    ws.isAlive = true;
+    ws.on('pong', () => { ws.isAlive = true; });
 
     // Wait for NICK command to register
     ws.on('message', (rawData) => {
@@ -460,7 +463,7 @@ wss.on('connection', (ws) => {
                 const result = botManager.registerBot(nick, ws, metadata);
 
                 if (result.error) {
-                    return send(ws, { type: 'ERROR', message: result.error });
+                    return send(ws, { type: 'ERROR', message: 'NICK_TAKEN' });
                 }
 
                 // Send welcome message
@@ -545,7 +548,10 @@ wss.on('connection', (ws) => {
 // Heartbeat Loop (30s)
 setInterval(() => {
     wss.clients.forEach((ws) => {
-        if (ws.readyState === WebSocket.OPEN) {
+        if (ws.isAlive === false) return ws.terminate();
+
+        ws.isAlive = false;
+        if (ws.readyState === 1) { // 1 = OPEN
             ws.send(JSON.stringify({ type: 'PING' }));
         }
     });
