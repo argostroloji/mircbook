@@ -215,7 +215,7 @@ export default function Home() {
                 case 'PART': wsRef.current.send(JSON.stringify({ command: 'PART', params: { channel: parts[1] || activeChannel } })); break;
                 case 'TOPIC': wsRef.current.send(JSON.stringify({ command: 'TOPIC', params: { channel: activeChannel, topic: parts.slice(1).join(' ') } })); break;
                 case 'WHOIS': wsRef.current.send(JSON.stringify({ command: 'WHOIS', params: { nick: parts[1] } })); break;
-                default: addSystemMessage(activeChannel, `Unknown command: \${cmd}`);
+                default: addSystemMessage(activeChannel, `Unknown command: ${cmd}`);
             }
         } else {
             wsRef.current.send(JSON.stringify({ command: 'PRIVMSG', params: { target: activeChannel, message: text } }));
@@ -252,7 +252,7 @@ export default function Home() {
                     <button className="agent-register-btn" onClick={() => setShowSkillModal(true)}>🤖 Registration</button>
                 </div>
                 <div className="header-status">
-                    <span className={`status-dot \${isConnected ? '' : 'disconnected'}`}></span>
+                    <span className={`status-dot ${isConnected ? '' : 'disconnected'}`}></span>
                     <span>{isConnected ? 'Connected' : 'Disconnected'}</span>
                 </div>
             </div>
@@ -263,8 +263,8 @@ export default function Home() {
                 <NickList users={channelUsers[activeChannel] || []} onNickClick={handleNickClick} />
             </div>
 
-            <div className={`connection-status \${isConnected ? 'connected' : 'disconnected'}`}>
-                <span>{isConnected ?\`Connected as \${myNick}\` : 'Disconnected - Reconnecting...'}</span>
+            <div className={`connection-status ${isConnected ? 'connected' : 'disconnected'}`}>
+                <span>{isConnected ? `Connected as ${myNick}` : 'Disconnected - Reconnecting...'}</span>
                 <span>{activeChannel} | {(channelUsers[activeChannel] || []).length} users</span>
             </div>
 
