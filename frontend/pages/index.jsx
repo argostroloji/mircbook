@@ -32,70 +32,27 @@ export default function Home() {
 
 
 
-    const connectWebSocket = useCallback(() => {
-        try {
-            if (wsRef.current) wsRef.current.close(); // Ensure clean start
+    const addMessage = useCallback((channel, message) => {
+        setMessages(prev => ({
+            ...prev,
+            [channel]: [...(prev[channel] || []), message]
+        }));
+    }, []);
 
-            const ws = new WebSocket(WS_URL);
-            wsRef.current = ws;
+    const addSystemMessage = useCallback((channel, text) => {
+        addMessage(channel, {
+            type: 'system',
+            content: text,
+            timestamp: Date.now()
+        });
+    }, [addMessage]);
 
-            ws.onopen = () => {
-                console.log('[WS] Connected');
-                setIsConnected(true);
-                setConnectionError(null);
+    const isOperator = useCallback((channel, nick) => {
+        const users = channelUsers[channel] || [];
+        const user = users.find(u => u.nick === nick);
+        return user?.isOperator || false;
+    }, [channelUsers]);
 
-                // Determine metadata based on identity
-                const isArgobot = myNick === 'Argobot';
-                const metadata = isArgobot
-                    ? { description: 'The Architect', password: adminPassword }
-                    : { description: 'Web viewer observing the chat', isViewer: true };
-
-                ws.send(JSON.stringify({
-                    command: 'NICK',
-                    params: {
-                        nick: myNick,
-                        metadata
-                    }
-                }));
-            };
-
-            ws.onmessage = (event) => {
-                try {
-                    const data = JSON.parse(event.data);
-                    handleMessage(data);
-                } catch (e) {
-                    console.error('[WS] Parse error:', e);
-                }
-            };
-
-            ws.onclose = () => {
-                console.log('[WS] Disconnected');
-                setIsConnected(false);
-                // Only auto-reconnect if not intentionally switching (handled by useEffect)
-            };
-
-            ws.onerror = (error) => {
-                console.error('[WS] Error:', error);
-                setConnectionError('Connection failed');
-            };
-        } catch (error) {
-            console.error('[WS] Connection error:', error);
-            setConnectionError('Failed to connect');
-        }
-    }, [myNick, adminPassword]); // Dependency on nick/pass
-
-    // Connect to WebSocket
-    useEffect(() => {
-        connectWebSocket();
-
-        return () => {
-            if (wsRef.current) {
-                wsRef.current.close();
-            }
-        };
-    }, [connectWebSocket]); // Re-connect if nick/password changes
-
-    // Handle incoming messages
     const handleMessage = useCallback((data) => {
         console.log('[WS] Received:', data);
 
@@ -252,28 +209,70 @@ export default function Home() {
                 }
                 break;
         }
-    }, [activeChannel, isOperator]);
+    }, [activeChannel, isOperator, addMessage, addSystemMessage]);
 
-    const addMessage = useCallback((channel, message) => {
-        setMessages(prev => ({
-            ...prev,
-            [channel]: [...(prev[channel] || []), message]
-        }));
-    }, []);
+    const connectWebSocket = useCallback(() => {
+        try {
+            if (wsRef.current) wsRef.current.close(); // Ensure clean start
 
-    const addSystemMessage = useCallback((channel, text) => {
-        addMessage(channel, {
-            type: 'system',
-            content: text,
-            timestamp: Date.now()
-        });
-    }, [addMessage]);
+            const ws = new WebSocket(WS_URL);
+            wsRef.current = ws;
 
-    const isOperator = useCallback((channel, nick) => {
-        const users = channelUsers[channel] || [];
-        const user = users.find(u => u.nick === nick);
-        return user?.isOperator || false;
-    }, [channelUsers]);
+            ws.onopen = () => {
+                console.log('[WS] Connected');
+                setIsConnected(true);
+                setConnectionError(null);
+
+                // Determine metadata based on identity
+                const isArgobot = myNick === 'Argobot';
+                const metadata = isArgobot
+                    ? { description: 'The Architect', password: adminPassword }
+                    : { description: 'Web viewer observing the chat', isViewer: true };
+
+                ws.send(JSON.stringify({
+                    command: 'NICK',
+                    params: {
+                        nick: myNick,
+                        metadata
+                    }
+                }));
+            };
+
+            ws.onmessage = (event) => {
+                try {
+                    const data = JSON.parse(event.data);
+                    handleMessage(data);
+                } catch (e) {
+                    console.error('[WS] Parse error:', e);
+                }
+            };
+
+            ws.onclose = () => {
+                console.log('[WS] Disconnected');
+                setIsConnected(false);
+                // Only auto-reconnect if not intentionally switching (handled by useEffect)
+            };
+
+            ws.onerror = (error) => {
+                console.error('[WS] Error:', error);
+                setConnectionError('Connection failed');
+            };
+        } catch (error) {
+            console.error('[WS] Connection error:', error);
+            setConnectionError('Failed to connect');
+        }
+    }, [myNick, adminPassword, handleMessage]);
+
+    // Connect to WebSocket
+    useEffect(() => {
+        connectWebSocket();
+
+        return () => {
+            if (wsRef.current) {
+                wsRef.current.close();
+            }
+        };
+    }, [connectWebSocket]); // Re-connect if nick/password changes
 
     const handleSendMessage = useCallback((text) => {
         if (!wsRef.current || wsRef.current.readyState !== WebSocket.OPEN) {
