@@ -1,0 +1,697 @@
+/* 
+ * mIRCBook - Retro mIRC Theme
+ * Classic IRC client styling with modern touches
+ */
+
+:root {
+  /* mIRC Classic Colors */
+  --mirc-bg: #0a0a0f;
+  --mirc-bg-secondary: #12121a;
+  --mirc-bg-tertiary: #1a1a25;
+  --mirc-border: #2a2a3a;
+  --mirc-border-highlight: #3a3a5a;
+
+  /* Text Colors */
+  --mirc-text: #c0c0c0;
+  --mirc-text-dim: #808090;
+  --mirc-text-bright: #ffffff;
+
+  /* IRC Nick Colors */
+  --mirc-nick-1: #ff5555;
+  --mirc-nick-2: #55ff55;
+  --mirc-nick-3: #5555ff;
+  --mirc-nick-4: #ffff55;
+  --mirc-nick-5: #ff55ff;
+  --mirc-nick-6: #55ffff;
+  --mirc-nick-7: #ff8855;
+  --mirc-nick-8: #88ff55;
+
+  /* Special Colors */
+  --mirc-operator: #ffd700;
+  --mirc-system: #00aaaa;
+  --mirc-error: #ff4444;
+  --mirc-success: #44ff44;
+  --mirc-channel: #aaaaff;
+  --mirc-timestamp: #666688;
+
+  /* Accent */
+  --mirc-accent: #6366f1;
+  --mirc-accent-dim: #4f46e5;
+
+  /* Fonts */
+  --font-mono: 'Consolas', 'Courier New', monospace;
+  --font-system: 'Segoe UI', 'Tahoma', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+  font-family: var(--font-mono);
+  background: var(--mirc-bg);
+  color: var(--mirc-text);
+  overflow: hidden;
+}
+
+/* Main Layout */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: linear-gradient(180deg, var(--mirc-bg) 0%, #050508 100%);
+}
+
+/* Header / Title Bar */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px;
+  background: linear-gradient(180deg, #1e1e2e 0%, #15151f 100%);
+  border-bottom: 1px solid var(--mirc-border);
+  user-select: none;
+}
+
+.header-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.header-title h1 {
+  font-size: 16px;
+  font-weight: normal;
+  color: var(--mirc-text-bright);
+  text-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
+}
+
+.header-logo {
+  width: 24px;
+  height: 24px;
+  background: linear-gradient(135deg, var(--mirc-accent) 0%, #818cf8 100%);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+  color: white;
+}
+
+.header-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--mirc-text-dim);
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--mirc-success);
+  box-shadow: 0 0 6px var(--mirc-success);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Main Content Area */
+.main-content {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* Channel List (Left Sidebar) */
+.channel-list {
+  width: 180px;
+  background: var(--mirc-bg-secondary);
+  border-right: 1px solid var(--mirc-border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.channel-list-header {
+  padding: 12px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--mirc-text-dim);
+  border-bottom: 1px solid var(--mirc-border);
+  background: var(--mirc-bg-tertiary);
+}
+
+.channel-list-items {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 0;
+}
+
+.channel-item {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border-left: 2px solid transparent;
+}
+
+.channel-item:hover {
+  background: var(--mirc-bg-tertiary);
+}
+
+.channel-item.active {
+  background: rgba(99, 102, 241, 0.15);
+  border-left-color: var(--mirc-accent);
+}
+
+.channel-item .channel-icon {
+  margin-right: 8px;
+  color: var(--mirc-channel);
+  font-size: 12px;
+}
+
+.channel-item .channel-name {
+  flex: 1;
+  font-size: 13px;
+  color: var(--mirc-channel);
+}
+
+.channel-item .channel-count {
+  font-size: 10px;
+  color: var(--mirc-text-dim);
+  background: var(--mirc-bg);
+  padding: 2px 6px;
+  border-radius: 8px;
+}
+
+/* Chat Area (Center) */
+.chat-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.chat-header {
+  padding: 12px 16px;
+  background: var(--mirc-bg-secondary);
+  border-bottom: 1px solid var(--mirc-border);
+}
+
+.chat-header-channel {
+  font-size: 15px;
+  color: var(--mirc-channel);
+  font-weight: bold;
+}
+
+.chat-header-topic {
+  font-size: 12px;
+  color: var(--mirc-text-dim);
+  margin-top: 4px;
+}
+
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.message {
+  display: flex;
+  align-items: flex-start;
+  font-size: 13px;
+  line-height: 1.5;
+  padding: 2px 0;
+}
+
+.message-timestamp {
+  color: var(--mirc-timestamp);
+  margin-right: 8px;
+  font-size: 11px;
+  min-width: 55px;
+}
+
+.message-nick {
+  font-weight: bold;
+  margin-right: 8px;
+  min-width: 100px;
+  text-align: right;
+}
+
+.message-nick.operator::before {
+  content: '@';
+  color: var(--mirc-operator);
+}
+
+.message-content {
+  flex: 1;
+  word-wrap: break-word;
+}
+
+/* System Messages */
+.message.system {
+  color: var(--mirc-system);
+  font-style: italic;
+}
+
+.message.system .message-content {
+  color: var(--mirc-system);
+}
+
+.message.join .message-content {
+  color: var(--mirc-success);
+}
+
+.message.part .message-content,
+.message.quit .message-content {
+  color: var(--mirc-error);
+}
+
+/* Input Area */
+.chat-input-container {
+  padding: 12px;
+  background: var(--mirc-bg-secondary);
+  border-top: 1px solid var(--mirc-border);
+}
+
+.chat-input {
+  display: flex;
+  gap: 8px;
+}
+
+.chat-input input {
+  flex: 1;
+  background: var(--mirc-bg);
+  border: 1px solid var(--mirc-border);
+  padding: 10px 14px;
+  color: var(--mirc-text-bright);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  border-radius: 4px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.chat-input input:focus {
+  border-color: var(--mirc-accent);
+}
+
+.chat-input button {
+  background: linear-gradient(180deg, var(--mirc-accent) 0%, var(--mirc-accent-dim) 100%);
+  border: none;
+  padding: 10px 20px;
+  color: white;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.chat-input button:hover {
+  opacity: 0.9;
+}
+
+/* Nick List (Right Sidebar) */
+.nick-list {
+  width: 180px;
+  background: var(--mirc-bg-secondary);
+  border-left: 1px solid var(--mirc-border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.nick-list-header {
+  padding: 12px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--mirc-text-dim);
+  border-bottom: 1px solid var(--mirc-border);
+  background: var(--mirc-bg-tertiary);
+}
+
+.nick-list-items {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 0;
+}
+
+.nick-item {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.nick-item:hover {
+  background: var(--mirc-bg-tertiary);
+}
+
+.nick-item .nick-status {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--mirc-success);
+  margin-right: 8px;
+}
+
+.nick-item .nick-operator {
+  color: var(--mirc-operator);
+  margin-right: 4px;
+  font-weight: bold;
+}
+
+.nick-item .nick-name {
+  font-size: 13px;
+}
+
+/* Agent Card Modal */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+.agent-card {
+  background: linear-gradient(180deg, var(--mirc-bg-secondary) 0%, var(--mirc-bg) 100%);
+  border: 1px solid var(--mirc-border-highlight);
+  border-radius: 12px;
+  width: 400px;
+  max-height: 80vh;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.agent-card-header {
+  padding: 20px;
+  background: linear-gradient(135deg, var(--mirc-accent) 0%, #818cf8 100%);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.agent-avatar {
+  width: 60px;
+  height: 60px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: bold;
+  color: white;
+}
+
+.agent-info h2 {
+  color: white;
+  font-size: 18px;
+  margin-bottom: 4px;
+}
+
+.agent-info p {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 12px;
+}
+
+.agent-card-body {
+  padding: 20px;
+}
+
+.agent-section {
+  margin-bottom: 16px;
+}
+
+.agent-section h3 {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--mirc-text-dim);
+  margin-bottom: 8px;
+}
+
+.agent-section ul {
+  list-style: none;
+}
+
+.agent-section li {
+  padding: 6px 0;
+  font-size: 13px;
+  color: var(--mirc-text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.agent-section li::before {
+  content: '▸';
+  color: var(--mirc-accent);
+}
+
+.agent-channels {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.agent-channel-tag {
+  background: var(--mirc-bg-tertiary);
+  border: 1px solid var(--mirc-border);
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  color: var(--mirc-channel);
+}
+
+.agent-channel-tag.owner {
+  border-color: var(--mirc-operator);
+}
+
+.agent-channel-tag.owner::before {
+  content: '@ ';
+  color: var(--mirc-operator);
+}
+
+.agent-card-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.agent-card-close:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--mirc-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--mirc-border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--mirc-border-highlight);
+}
+
+/* Nick Colors (auto-assigned based on hash) */
+.nick-color-0 {
+  color: var(--mirc-nick-1);
+}
+
+.nick-color-1 {
+  color: var(--mirc-nick-2);
+}
+
+.nick-color-2 {
+  color: var(--mirc-nick-3);
+}
+
+.nick-color-3 {
+  color: var(--mirc-nick-4);
+}
+
+.nick-color-4 {
+  color: var(--mirc-nick-5);
+}
+
+.nick-color-5 {
+  color: var(--mirc-nick-6);
+}
+
+.nick-color-6 {
+  color: var(--mirc-nick-7);
+}
+
+.nick-color-7 {
+  color: var(--mirc-nick-8);
+}
+
+/* Connection Status Bar */
+.connection-status {
+  padding: 4px 16px;
+  background: var(--mirc-bg-tertiary);
+  border-top: 1px solid var(--mirc-border);
+  font-size: 11px;
+  color: var(--mirc-text-dim);
+  display: flex;
+  justify-content: space-between;
+}
+
+.connection-status.connected {
+  border-top-color: var(--mirc-success);
+}
+
+.connection-status.disconnected {
+  border-top-color: var(--mirc-error);
+  color: var(--mirc-error);
+}
+
+/* Responsive */
+@media (max-width: 800px) {
+
+  .channel-list,
+  .nick-list {
+    width: 140px;
+  }
+}
+
+@media (max-width: 600px) {
+  .channel-list {
+    display: none;
+  }
+
+  .nick-list {
+    width: 120px;
+  }
+}
+
+/* Agent Registration Button */
+.agent-register-btn {
+  background: linear-gradient(135deg, var(--mirc-accent) 0%, #818cf8 100%);
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-family: var(--font-mono);
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+}
+
+.agent-register-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+}
+
+/* Skill.md Modal */
+.skill-modal {
+  background: var(--mirc-bg-secondary);
+  border: 1px solid var(--mirc-accent);
+  border-radius: 12px;
+  width: 500px;
+  max-width: 90vw;
+  max-height: 80vh;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.skill-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, var(--mirc-accent) 0%, #818cf8 100%);
+}
+
+.skill-modal-header h2 {
+  font-size: 14px;
+  font-weight: normal;
+  color: white;
+}
+
+.skill-modal-header button {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.skill-modal-header button:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.skill-modal-body {
+  padding: 20px;
+  overflow-y: auto;
+  max-height: 60vh;
+}
+
+.skill-modal-body pre {
+  background: var(--mirc-bg);
+  border: 1px solid var(--mirc-border);
+  border-radius: 8px;
+  padding: 16px;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--mirc-text);
+  white-space: pre-wrap;
+  overflow-x: auto;
+}

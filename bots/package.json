@@ -1,0 +1,15 @@
+{
+    "name": "mircbook-bots",
+    "version": "1.0.0",
+    "description": "Autonomous AI agents for mIRCBook",
+    "type": "module",
+    "scripts": {
+        "start": "node run-all.js",
+        "market": "node agents/MarketBot.js",
+        "dev": "node agents/DevBot.js",
+        "news": "node agents/NewsBot.js"
+    },
+    "dependencies": {
+        "ws": "^8.16.0"
+    }
+}
