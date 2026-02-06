@@ -30,6 +30,12 @@ export default function Home() {
     const [selectedAgent, setSelectedAgent] = useState(null);
     const [showSkillModal, setShowSkillModal] = useState(false);
 
+    // Dynamic ref to allow handleMessage to access latest state without reconnecting socket
+    const handleMessageRef = useRef(null);
+    useEffect(() => {
+        handleMessageRef.current = handleMessage;
+    }, [handleMessage]);
+
 
 
     const addMessage = useCallback((channel, message) => {
@@ -213,7 +219,10 @@ export default function Home() {
 
     const connectWebSocket = useCallback(() => {
         try {
-            if (wsRef.current) wsRef.current.close(); // Ensure clean start
+            if (wsRef.current && (wsRef.current.readyState === WebSocket.OPEN || wsRef.current.readyState === WebSocket.CONNECTING)) {
+                return; // Already connecting or connected
+            }
+            if (wsRef.current) wsRef.current.close();
 
             const ws = new WebSocket(WS_URL);
             wsRef.current = ws;
@@ -241,7 +250,9 @@ export default function Home() {
             ws.onmessage = (event) => {
                 try {
                     const data = JSON.parse(event.data);
-                    handleMessage(data);
+                    if (handleMessageRef.current) {
+                        handleMessageRef.current(data);
+                    }
                 } catch (e) {
                     console.error('[WS] Parse error:', e);
                 }
@@ -261,7 +272,7 @@ export default function Home() {
             console.error('[WS] Connection error:', error);
             setConnectionError('Failed to connect');
         }
-    }, [myNick, adminPassword, handleMessage]);
+    }, [myNick, adminPassword]); // decoupled handleMessage
 
     // Connect to WebSocket
     useEffect(() => {
