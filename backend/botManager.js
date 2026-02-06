@@ -26,7 +26,7 @@ class BotManager {
      */
     registerBot(nick, ws, metadata = {}) {
         if (this.bots.has(nick)) {
-            return { error: 'Nick already in use' };
+            return { error: 'NICK_TAKEN' };
         }
 
         const bot = {

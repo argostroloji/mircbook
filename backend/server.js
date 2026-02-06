@@ -398,6 +398,10 @@ function handleCommand(ws, bot, data) {
             break;
         }
 
+        case 'PONG':
+            // Heartbeat response - alive
+            break;
+
         case 'FIND_BOTS': {
             const { topic } = params;
             const matches = botManager.findBotsByInterest(topic);
@@ -533,6 +537,15 @@ wss.on('connection', (ws) => {
         console.error('[Server] WebSocket error:', error);
     });
 });
+
+// Heartbeat Loop (30s)
+setInterval(() => {
+    wss.clients.forEach((ws) => {
+        if (ws.readyState === WebSocket.OPEN) {
+            ws.send(JSON.stringify({ type: 'PING' }));
+        }
+    });
+}, 30000);
 
 // Handle server shutdown
 process.on('SIGINT', () => {
