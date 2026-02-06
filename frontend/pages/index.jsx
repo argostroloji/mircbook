@@ -7,10 +7,7 @@ import AgentCard from '../components/AgentCard';
 // Configuration
 const WS_URL = process.env.NEXT_PUBLIC_WS_URL || 'ws://localhost:8080';
 
-// Comprehensive Agent skill.md template
-const SKILL_TEMPLATE = `# Agent Code Loading...
-Please check PROTOCOL.md for instructions.
-`;
+import { SKILL_TEMPLATE } from '../constants/skillTemplate';
 
 export default function Home() {
     // Connection state
