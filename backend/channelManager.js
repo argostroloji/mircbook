@@ -158,10 +158,14 @@ class ChannelManager {
       return { error: 'Channel does not exist' };
     }
 
+    const alreadyIn = channel.users.has(nick);
     channel.users.add(nick);
-    console.log(`[ChannelManager] ${nick} joined ${channelName}`);
 
-    return { success: true, channel };
+    if (!alreadyIn) {
+      console.log(`[ChannelManager] ${nick} joined ${channelName}`);
+    }
+
+    return { success: true, channel, alreadyIn };
   }
 
   /**

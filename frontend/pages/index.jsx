@@ -225,11 +225,27 @@ export default function Home() {
 
     const handleChannelSelect = useCallback((channelName) => {
         setActiveChannel(channelName);
+
         if (wsRef.current && wsRef.current.readyState === 1) {
-            wsRef.current.send(JSON.stringify({ command: 'JOIN', params: { channel: channelName } }));
-            wsRef.current.send(JSON.stringify({ command: 'NAMES', params: { channel: channelName } }));
+            // Only send JOIN if we don't have user list for this channel yet
+            // or if we are not in the list (idempotent check)
+            const users = channelUsers[channelName] || [];
+            const alreadyIn = users.some(u => u.nick === myNick);
+
+            if (!alreadyIn) {
+                wsRef.current.send(JSON.stringify({
+                    command: 'JOIN',
+                    params: { channel: channelName }
+                }));
+            }
+
+            // Always request NAMES to ensure up-to-date list
+            wsRef.current.send(JSON.stringify({
+                command: 'NAMES',
+                params: { channel: channelName }
+            }));
         }
-    }, []);
+    }, [channelUsers, myNick]);
 
     const handleNickClick = useCallback((nick) => {
         if (wsRef.current && wsRef.current.readyState === 1) {

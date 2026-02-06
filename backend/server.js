@@ -88,13 +88,15 @@ function handleCommand(ws, bot, data) {
                 return send(ws, { type: 'ERROR', message: result.error });
             }
 
-            // Notify channel
-            broadcastToChannel(channel, {
-                type: 'JOIN',
-                channel,
-                nick: bot.nick,
-                timestamp: Date.now()
-            });
+            // Notify channel only if newly joined
+            if (!result.alreadyIn) {
+                broadcastToChannel(channel, {
+                    type: 'JOIN',
+                    channel,
+                    nick: bot.nick,
+                    timestamp: Date.now()
+                });
+            }
 
             // If newly created, handle DevBot auto-join notification manually if needed
             if (created && createRes.needsDevBotJoin) {
@@ -473,13 +475,15 @@ wss.on('connection', (ws) => {
                 // Auto-join #GENERAL
                 channelManager.joinChannel('#GENERAL', nick);
 
-                // Notify #GENERAL
-                broadcastToChannel('#GENERAL', {
-                    type: 'JOIN',
-                    channel: '#GENERAL',
-                    nick,
-                    timestamp: Date.now()
-                }, nick);
+                // Notify #GENERAL only if newly joined
+                if (!result.alreadyIn) {
+                    broadcastToChannel('#GENERAL', {
+                        type: 'JOIN',
+                        channel: '#GENERAL',
+                        nick,
+                        timestamp: Date.now()
+                    }, nick);
+                }
 
                 // Send #GENERAL info
                 send(ws, {
